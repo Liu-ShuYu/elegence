@@ -9,12 +9,42 @@
   color: #fff;
   padding: 2rem;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.home::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1.5" fill="rgba(255,255,255,0.1)"/></svg>');
+  animation: float 20s infinite linear;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-100px); }
 }
 
 .home h1 {
   font-size: 3rem;
   margin-bottom: 1rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  animation: slideInFromTop 0.8s ease;
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .home p {
@@ -22,13 +52,25 @@
   margin-bottom: 2rem;
   max-width: 600px;
   line-height: 1.6;
+  animation: slideInFromBottom 0.8s ease 0.2s both;
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .start-button {
   padding: 1.5rem 3rem;
   font-size: 1.8rem;
   color: #fff;
-  background-color: #ff6b6b;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
   border: none;
   border-radius: 50px;
   cursor: pointer;
@@ -36,10 +78,59 @@
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
   font-weight: bold;
+  position: relative;
+  overflow: hidden;
+  animation: slideInFromBottom 0.8s ease 0.4s both;
+}
+
+.start-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.start-button:hover::before {
+  left: 100%;
 }
 
 .start-button:hover {
-  background-color: #ff5252;
+  background: linear-gradient(135deg, #ff5252 0%, #ff3838 100%);
   transform: translateY(-2px);
   box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
+}
+
+.start-button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .home h1 {
+    font-size: 2.5rem;
+  }
+
+  .home p {
+    font-size: 1rem;
+  }
+
+  .start-button {
+    padding: 1.2rem 2.5rem;
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .home h1 {
+    font-size: 2rem;
+  }
+
+  .start-button {
+    padding: 1rem 2rem;
+    font-size: 1.3rem;
+  }
 }

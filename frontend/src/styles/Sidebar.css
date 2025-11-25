@@ -1,0 +1,84 @@
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
+  background: rgba(44, 62, 80, 0.95);
+  backdrop-filter: blur(10px);
+  transform: translateX(-250px);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  border-right: 3px solid #3498db;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar-content {
+  padding: 2rem 1rem;
+  color: white;
+}
+
+.sidebar-content h3 {
+  margin: 0 0 1rem 0;
+  color: #ecf0f1;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.sidebar-button {
+  display: block;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.sidebar-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
+}
+
+.sidebar-button.active {
+  background: rgba(52, 152, 219, 0.8);
+  border-color: #3498db;
+  color: white;
+}
+
+/* 悬浮按钮 - 控制sidebar展开/收起 */
+.floating-sidebar-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  background: rgba(52, 152, 219, 0.9);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-sidebar-btn:hover {
+  background: rgba(52, 152, 219, 1);
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}

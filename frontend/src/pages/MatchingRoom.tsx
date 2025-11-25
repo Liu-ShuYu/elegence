@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import '../styles/MatchingRoom.css';
 
 interface Card {
@@ -20,7 +21,7 @@ interface DraggedCard {
 }
 
 function MatchingRoom() {
-  const [leftCards] = useState<Card[]>([
+  const [leftCards, setLeftCards] = useState<Card[]>([
     { id: 1, type: 'left', color: '#FF6B6B', label: '红' },
     { id: 2, type: 'left', color: '#4ECDC4', label: '青' },
     { id: 3, type: 'left', color: '#45B7D1', label: '蓝' },
@@ -77,7 +78,7 @@ function MatchingRoom() {
     { id: 90, type: 'left', color: '#7E5109', label: '土黄' },
   ]);
 
-  const [rightCards] = useState<Card[]>([
+  const [rightCards, setRightCards] = useState<Card[]>([
     { id: 7, type: 'right', color: '#BB8FCE', label: '紫' },
     { id: 8, type: 'right', color: '#85C1E2', label: '靛' },
     { id: 9, type: 'right', color: '#F8B88B', label: '棕' },
@@ -151,6 +152,11 @@ function MatchingRoom() {
     { left: null, right: null, rowId: '5' },
   ]);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [scores, setScores] = useState<{ red: number; yellow: number; green: number }>({
+    red: 0,
+    yellow: 0,
+    green: 0,
+  });
 
   const handleDragStart = (card: Card, source: 'left' | 'right') => {
     setDraggedCard({ card, source });
@@ -166,27 +172,124 @@ function MatchingRoom() {
   };
 
   const performMatchWithCards = (leftCard: Card, rightCard: Card) => {
-    const newMatch = { left: leftCard, right: rightCard };
-    setMatchHistory([...matchHistory, newMatch]);
-
-    // 检查是否完成任务
-    if (
-      (leftCard.label === '红' && rightCard.label === '紫') ||
-      (leftCard.label === '青' && rightCard.label === '靛') ||
-      (leftCard.label === '蓝' && rightCard.label === '粉')
-    ) {
-      const taskIndex = tasks.findIndex(
-        (t) =>
-          (t.requirement.includes(leftCard.label) &&
-            t.requirement.includes(rightCard.label))
-      );
-      if (taskIndex !== -1 && !completedTasks.includes(taskIndex)) {
-        setCompletedTasks([...completedTasks, taskIndex]);
+    // 如果左侧是表达式，计算表达式结果并与右侧数字比较
+    const evalExpression = (expr: string) => {
+      expr = expr.replace(/\s+/g, '');
+      if (expr.includes('+')) {
+        const parts = expr.split('+');
+        return Number(parts[0]) + Number(parts[1]);
       }
+      if (expr.includes('-')) {
+        const parts = expr.split('-');
+        return Number(parts[0]) - Number(parts[1]);
+      }
+      return NaN;
+    };
+    const leftVal = evalExpression(leftCard.label);
+    const rightVal = evalExpression(rightCard.label);
+
+    const isNumericMatch = !Number.isNaN(leftVal) && !Number.isNaN(rightVal) ? leftVal === rightVal : false;
+
+    // 新规则：必须 数值结果相同 且 颜色相同 才算匹配
+    const isColorMatch = leftCard.color === rightCard.color;
+    const isMatch = isNumericMatch && isColorMatch;
+
+    if (isMatch) {
+      const newMatch = { left: leftCard, right: rightCard };
+      setMatchHistory([...matchHistory, newMatch]);
+
+      // 仅为该颜色 +1（红/黄/绿）
+      const redHex = '#FF4D4D';
+      const yellowHex = '#F1C40F';
+      const greenHex = '#2ECC71';
+
+      setScores((s) => {
+        if (leftCard.color === redHex) return { ...s, red: s.red + 1 };
+        if (leftCard.color === yellowHex) return { ...s, yellow: s.yellow + 1 };
+        if (leftCard.color === greenHex) return { ...s, green: s.green + 1 };
+        return s;
+      });
     }
 
     setDraggedCard(null);
   };
+
+  // 生成关卡 1 (十以内加减法)
+  const startLevel1 = (pairCount = 12) => {
+    const reds = '#FF4D4D';
+    const yellows = '#F1C40F';
+    const greens = '#2ECC71';
+    const colorPool = [reds, yellows, greens];
+
+    const newLeft: Card[] = [];
+    const newRight: Card[] = [];
+    let idCounter = 1000;
+
+    for (let i = 0; i < pairCount; i++) {
+      // 随机生成目标结果 r
+      const r = Math.floor(Math.random() * 11); // 0..10
+
+      // 生成左侧表达式，使其结果为 r
+      const leftOp = Math.random() < 0.5 ? '+' : '-';
+      let la = 0;
+      let lb = 0;
+      if (leftOp === '+') {
+        la = Math.floor(Math.random() * (r + 1));
+        lb = r - la;
+      } else {
+        la = Math.floor(Math.random() * (11 - r)) + r; // la in [r,10]
+        lb = la - r;
+      }
+      const leftExpr = `${la}${leftOp}${lb}`;
+
+      // 生成右侧表达式（可不同）使其结果为 r
+      const rightOp = Math.random() < 0.5 ? '+' : '-';
+      let ra = 0;
+      let rb = 0;
+      if (rightOp === '+') {
+        ra = Math.floor(Math.random() * (r + 1));
+        rb = r - ra;
+      } else {
+        ra = Math.floor(Math.random() * (11 - r)) + r;
+        rb = ra - r;
+      }
+      const rightExpr = `${ra}${rightOp}${rb}`;
+
+      const leftColor = colorPool[Math.floor(Math.random() * colorPool.length)];
+      const rightColor = colorPool[Math.floor(Math.random() * colorPool.length)];
+
+      newLeft.push({ id: idCounter++, type: 'left', color: leftColor, label: leftExpr });
+      newRight.push({ id: idCounter++, type: 'right', color: rightColor, label: rightExpr });
+    }
+
+    // 打乱左右顺序以增加随机性
+    for (let i = newLeft.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newLeft[i], newLeft[j]] = [newLeft[j], newLeft[i]];
+    }
+    for (let i = newRight.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newRight[i], newRight[j]] = [newRight[j], newRight[i]];
+    }
+
+    setLeftCards(newLeft);
+    setRightCards(newRight);
+    setScores({ red: 0, yellow: 0, green: 0 });
+    setMatchHistory([]);
+    setCompletedTasks([]);
+  };
+
+  const location = useLocation();
+  useEffect(() => {
+    // 如果来自选关页并传入 level 参数，自动开始对应关卡
+    // 目前只支持 level === 1
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const lvl = location.state?.level;
+    if (lvl === 1) {
+      startLevel1(12);
+    }
+  }, [location]);
 
   const handleDropOnCard = (
     e: React.DragEvent<HTMLDivElement>,
@@ -268,6 +371,7 @@ function MatchingRoom() {
 
   return (
     <div className="matching-room">
+      
       <div className="task-area">
         <div className="task-container">
           <div className="task-header">
@@ -400,8 +504,13 @@ function MatchingRoom() {
         <button className="clear-button" onClick={handleClear}>
           清空
         </button>
-        <div className="stats">
-          已完成: {completedTasks.length} / {tasks.length} | 已匹配: {matchHistory.length}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <div style={{ background: '#FF4D4D', color: '#fff', padding: '6px 8px', borderRadius: 6 }}>红: {scores.red}</div>
+            <div style={{ background: '#F1C40F', color: '#111', padding: '6px 8px', borderRadius: 6 }}>黄: {scores.yellow}</div>
+            <div style={{ background: '#2ECC71', color: '#fff', padding: '6px 8px', borderRadius: 6 }}>绿: {scores.green}</div>
+          </div>
+          <div className="stats">已完成: {completedTasks.length} / {tasks.length} | 已匹配: {matchHistory.length}</div>
         </div>
         <button 
           className="history-button" 
