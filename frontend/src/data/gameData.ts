@@ -2,6 +2,348 @@ import type { Theme, GameProgress } from '../types/game';
 
 export const createThemes = (gameProgress: GameProgress): Theme[] => [
   {
+    id: 'addition_subtraction',
+    name: '加减运算配对',
+    description: '加法和减法运算表达式与结果的匹配挑战',
+    icon: '➕➖',
+    color: '#FF5722',
+    totalLevels: 10,
+    completedLevels: gameProgress.additionSubtraction?.filter(Boolean).length || 0,
+    levels: [
+      {
+        id: 1,
+        title: '十以内加减',
+        description: '十以内简单加减法运算',
+        difficulty: '简单',
+        unlocked: true,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得1分'],
+        targetScore: 8,
+        completed: gameProgress.additionSubtraction?.[0] || false
+      },
+      {
+        id: 2,
+        title: '进位退位运算',
+        description: '包含进位和退位的加减运算',
+        difficulty: '简单',
+        unlocked: gameProgress.additionSubtraction?.[0] || false,
+        rules: ['同色且结果相同的表达式配对', '包含进位退位', '每对正确匹配得1分'],
+        targetScore: 10,
+        completed: gameProgress.additionSubtraction?.[1] || false
+      },
+      {
+        id: 3,
+        title: '两位数运算',
+        description: '两位数加减法运算',
+        difficulty: '中等',
+        unlocked: gameProgress.additionSubtraction?.[1] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
+        targetScore: 12,
+        completed: gameProgress.additionSubtraction?.[2] || false
+      },
+      {
+        id: 4,
+        title: '混合运算',
+        description: '加法和减法混合运算',
+        difficulty: '中等',
+        unlocked: gameProgress.additionSubtraction?.[2] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
+        targetScore: 15,
+        completed: gameProgress.additionSubtraction?.[3] || false
+      },
+      {
+        id: 5,
+        title: '快速加减',
+        description: '60秒内完成加减运算挑战',
+        difficulty: '困难',
+        unlocked: gameProgress.additionSubtraction?.[3] || false,
+        rules: ['同色且结果相同的表达式配对', '60秒时间限制', '每对正确匹配得3分'],
+        timeLimit: 60,
+        targetScore: 18,
+        completed: gameProgress.additionSubtraction?.[4] || false
+      },
+      {
+        id: 6,
+        title: '复杂加减',
+        description: '复杂加减法运算挑战',
+        difficulty: '困难',
+        unlocked: gameProgress.additionSubtraction?.[4] || false,
+        rules: ['同色且结果相同的表达式配对', '多重运算', '每对正确匹配得3分'],
+        targetScore: 20,
+        completed: gameProgress.additionSubtraction?.[5] || false
+      },
+      {
+        id: 7,
+        title: '高级加减',
+        description: '高级加减法运算配对挑战',
+        difficulty: '专家',
+        unlocked: gameProgress.additionSubtraction?.[5] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得4分'],
+        targetScore: 22,
+        completed: gameProgress.additionSubtraction?.[6] || false
+      },
+      {
+        id: 8,
+        title: '极速加减',
+        description: '45秒内完成高难度加减运算',
+        difficulty: '专家',
+        unlocked: gameProgress.additionSubtraction?.[6] || false,
+        rules: ['同色且结果相同的表达式配对', '45秒时间限制', '每对正确匹配得5分'],
+        timeLimit: 45,
+        targetScore: 25,
+        completed: gameProgress.additionSubtraction?.[7] || false
+      },
+      {
+        id: 9,
+        title: '终极加减',
+        description: '加减运算终极挑战',
+        difficulty: '专家',
+        unlocked: gameProgress.additionSubtraction?.[7] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得5分'],
+        targetScore: 28,
+        completed: gameProgress.additionSubtraction?.[8] || false
+      },
+      {
+        id: 10,
+        title: '加减宗师',
+        description: '加减运算的最高境界',
+        difficulty: '专家',
+        unlocked: gameProgress.additionSubtraction?.[8] || false,
+        rules: ['同色且结果相同的表达式配对', '30秒时间限制', '每对正确匹配得10分'],
+        timeLimit: 30,
+        targetScore: 30,
+        completed: gameProgress.additionSubtraction?.[9] || false
+      }
+    ]
+  },
+  {
+    id: 'multiplication_division',
+    name: '乘除运算配对',
+    description: '乘法和除法运算表达式与结果的匹配挑战',
+    icon: '✖️➗',
+    color: '#9C27B0',
+    totalLevels: 10,
+    completedLevels: gameProgress.multiplicationDivision?.filter(Boolean).length || 0,
+    levels: [
+      {
+        id: 1,
+        title: '九九乘法',
+        description: '九九乘法表基础运算',
+        difficulty: '简单',
+        unlocked: true,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得1分'],
+        targetScore: 8,
+        completed: gameProgress.multiplicationDivision?.[0] || false
+      },
+      {
+        id: 2,
+        title: '简单除法',
+        description: '简单除法运算',
+        difficulty: '简单',
+        unlocked: gameProgress.multiplicationDivision?.[0] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得1分'],
+        targetScore: 10,
+        completed: gameProgress.multiplicationDivision?.[1] || false
+      },
+      {
+        id: 3,
+        title: '两位数乘法',
+        description: '两位数乘法运算',
+        difficulty: '中等',
+        unlocked: gameProgress.multiplicationDivision?.[1] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
+        targetScore: 12,
+        completed: gameProgress.multiplicationDivision?.[2] || false
+      },
+      {
+        id: 4,
+        title: '复杂除法',
+        description: '复杂除法运算',
+        difficulty: '中等',
+        unlocked: gameProgress.multiplicationDivision?.[2] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
+        targetScore: 15,
+        completed: gameProgress.multiplicationDivision?.[3] || false
+      },
+      {
+        id: 5,
+        title: '快速乘除',
+        description: '60秒内完成乘除运算挑战',
+        difficulty: '困难',
+        unlocked: gameProgress.multiplicationDivision?.[3] || false,
+        rules: ['同色且结果相同的表达式配对', '60秒时间限制', '每对正确匹配得3分'],
+        timeLimit: 60,
+        targetScore: 18,
+        completed: gameProgress.multiplicationDivision?.[4] || false
+      },
+      {
+        id: 6,
+        title: '混合乘除',
+        description: '乘法和除法混合运算',
+        difficulty: '困难',
+        unlocked: gameProgress.multiplicationDivision?.[4] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得3分'],
+        targetScore: 20,
+        completed: gameProgress.multiplicationDivision?.[5] || false
+      },
+      {
+        id: 7,
+        title: '高级乘除',
+        description: '高级乘除法运算配对挑战',
+        difficulty: '专家',
+        unlocked: gameProgress.multiplicationDivision?.[5] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得4分'],
+        targetScore: 22,
+        completed: gameProgress.multiplicationDivision?.[6] || false
+      },
+      {
+        id: 8,
+        title: '极速乘除',
+        description: '45秒内完成高难度乘除运算',
+        difficulty: '专家',
+        unlocked: gameProgress.multiplicationDivision?.[6] || false,
+        rules: ['同色且结果相同的表达式配对', '45秒时间限制', '每对正确匹配得5分'],
+        timeLimit: 45,
+        targetScore: 25,
+        completed: gameProgress.multiplicationDivision?.[7] || false
+      },
+      {
+        id: 9,
+        title: '终极乘除',
+        description: '乘除运算终极挑战',
+        difficulty: '专家',
+        unlocked: gameProgress.multiplicationDivision?.[7] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得5分'],
+        targetScore: 28,
+        completed: gameProgress.multiplicationDivision?.[8] || false
+      },
+      {
+        id: 10,
+        title: '乘除宗师',
+        description: '乘除运算的最高境界',
+        difficulty: '专家',
+        unlocked: gameProgress.multiplicationDivision?.[8] || false,
+        rules: ['同色且结果相同的表达式配对', '30秒时间限制', '每对正确匹配得10分'],
+        timeLimit: 30,
+        targetScore: 30,
+        completed: gameProgress.multiplicationDivision?.[9] || false
+      }
+    ]
+  },
+  {
+    id: 'mathematics',
+    name: '数学运算配对',
+    description: '数学运算表达式与结果的匹配挑战',
+    icon: '🔢',
+    color: '#4CAF50',
+    totalLevels: 10,
+    completedLevels: gameProgress.mathematics?.filter(Boolean).length || 0,
+    levels: [
+      {
+        id: 1,
+        title: '基础加减法',
+        description: '十以内简单加减法匹配',
+        difficulty: '简单',
+        unlocked: true,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得1分'],
+        targetScore: 8,
+        completed: gameProgress.mathematics?.[0] || false
+      },
+      {
+        id: 2,
+        title: '进位退位运算',
+        description: '包含进位和退位的运算',
+        difficulty: '简单',
+        unlocked: gameProgress.mathematics?.[0] || false,
+        rules: ['同色且结果相同的表达式配对', '包含进位退位运算', '每对正确匹配得1分'],
+        targetScore: 10,
+        completed: gameProgress.mathematics?.[1] || false
+      },
+      {
+        id: 3,
+        title: '乘除法基础',
+        description: '九九乘法表和简单除法匹配',
+        difficulty: '中等',
+        unlocked: gameProgress.mathematics?.[1] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
+        targetScore: 12,
+        completed: gameProgress.mathematics?.[2] || false
+      },
+      {
+        id: 4,
+        title: '四则运算',
+        description: '加减乘除混合运算',
+        difficulty: '中等',
+        unlocked: gameProgress.mathematics?.[2] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
+        targetScore: 15,
+        completed: gameProgress.mathematics?.[3] || false
+      },
+      {
+        id: 5,
+        title: '快速运算',
+        description: '60秒内完成运算挑战',
+        difficulty: '困难',
+        unlocked: gameProgress.mathematics?.[3] || false,
+        rules: ['同色且结果相同的表达式配对', '60秒时间限制', '每对正确匹配得3分'],
+        timeLimit: 60,
+        targetScore: 18,
+        completed: gameProgress.mathematics?.[4] || false
+      },
+      {
+        id: 6,
+        title: '复杂运算',
+        description: '复杂数学运算挑战',
+        difficulty: '困难',
+        unlocked: gameProgress.mathematics?.[4] || false,
+        rules: ['同色且结果相同的表达式配对', '多重运算', '每对正确匹配得3分'],
+        targetScore: 20,
+        completed: gameProgress.mathematics?.[5] || false
+      },
+      {
+        id: 7,
+        title: '高级运算',
+        description: '高级数学运算配对挑战',
+        difficulty: '专家',
+        unlocked: gameProgress.mathematics?.[5] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得4分'],
+        targetScore: 22,
+        completed: gameProgress.mathematics?.[6] || false
+      },
+      {
+        id: 8,
+        title: '极速运算',
+        description: '45秒内完成高难度运算',
+        difficulty: '专家',
+        unlocked: gameProgress.mathematics?.[6] || false,
+        rules: ['同色且结果相同的表达式配对', '45秒时间限制', '每对正确匹配得5分'],
+        timeLimit: 45,
+        targetScore: 25,
+        completed: gameProgress.mathematics?.[7] || false
+      },
+      {
+        id: 9,
+        title: '终极运算',
+        description: '数学运算终极挑战',
+        difficulty: '专家',
+        unlocked: gameProgress.mathematics?.[7] || false,
+        rules: ['同色且结果相同的表达式配对', '每对正确匹配得5分'],
+        targetScore: 28,
+        completed: gameProgress.mathematics?.[8] || false
+      },
+      {
+        id: 10,
+        title: '运算宗师',
+        description: '数学运算的最高境界',
+        difficulty: '专家',
+        unlocked: gameProgress.mathematics?.[8] || false,
+        rules: ['同色且结果相同的表达式配对', '30秒时间限制', '每对正确匹配得10分'],
+        timeLimit: 30,
+        targetScore: 30,
+        completed: gameProgress.mathematics?.[9] || false
+      }
+    ]
+  },
+  {
     id: 'chinese_english_words',
     name: '中英单词配对',
     description: '中英文单词互译匹配挑战，提升词汇记忆能力',
@@ -454,462 +796,6 @@ export const createThemes = (gameProgress: GameProgress): Theme[] => [
         timeLimit: 30,
         targetScore: 30,
         completed: gameProgress.lyrics?.[9] || false
-      }
-    ]
-  },
-  {
-    id: 'mathematics',
-    name: '数学运算配对',
-    description: '数学运算表达式与结果的匹配挑战',
-    icon: '🔢',
-    color: '#4CAF50',
-    totalLevels: 10,
-    completedLevels: gameProgress.mathematics?.filter(Boolean).length || 0,
-    levels: [
-      {
-        id: 1,
-        title: '基础加减法',
-        description: '十以内简单加减法匹配',
-        difficulty: '简单',
-        unlocked: true,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得1分'],
-        targetScore: 8,
-        completed: gameProgress.mathematics?.[0] || false
-      },
-      {
-        id: 2,
-        title: '进位退位运算',
-        description: '包含进位和退位的运算',
-        difficulty: '简单',
-        unlocked: gameProgress.mathematics?.[0] || false,
-        rules: ['同色且结果相同的表达式配对', '包含进位退位运算', '每对正确匹配得1分'],
-        targetScore: 10,
-        completed: gameProgress.mathematics?.[1] || false
-      },
-      {
-        id: 3,
-        title: '乘除法基础',
-        description: '九九乘法表和简单除法匹配',
-        difficulty: '中等',
-        unlocked: gameProgress.mathematics?.[1] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
-        targetScore: 12,
-        completed: gameProgress.mathematics?.[2] || false
-      },
-      {
-        id: 4,
-        title: '四则运算',
-        description: '加减乘除混合运算',
-        difficulty: '中等',
-        unlocked: gameProgress.mathematics?.[2] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
-        targetScore: 15,
-        completed: gameProgress.mathematics?.[3] || false
-      },
-      {
-        id: 5,
-        title: '快速运算',
-        description: '60秒内完成运算挑战',
-        difficulty: '困难',
-        unlocked: gameProgress.mathematics?.[3] || false,
-        rules: ['同色且结果相同的表达式配对', '60秒时间限制', '每对正确匹配得3分'],
-        timeLimit: 60,
-        targetScore: 18,
-        completed: gameProgress.mathematics?.[4] || false
-      },
-      {
-        id: 6,
-        title: '复杂运算',
-        description: '复杂数学运算挑战',
-        difficulty: '困难',
-        unlocked: gameProgress.mathematics?.[4] || false,
-        rules: ['同色且结果相同的表达式配对', '多重运算', '每对正确匹配得3分'],
-        targetScore: 20,
-        completed: gameProgress.mathematics?.[5] || false
-      },
-      {
-        id: 7,
-        title: '高级运算',
-        description: '高级数学运算配对挑战',
-        difficulty: '专家',
-        unlocked: gameProgress.mathematics?.[5] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得4分'],
-        targetScore: 22,
-        completed: gameProgress.mathematics?.[6] || false
-      },
-      {
-        id: 8,
-        title: '极速运算',
-        description: '45秒内完成高难度运算',
-        difficulty: '专家',
-        unlocked: gameProgress.mathematics?.[6] || false,
-        rules: ['同色且结果相同的表达式配对', '45秒时间限制', '每对正确匹配得5分'],
-        timeLimit: 45,
-        targetScore: 25,
-        completed: gameProgress.mathematics?.[7] || false
-      },
-      {
-        id: 9,
-        title: '终极运算',
-        description: '数学运算终极挑战',
-        difficulty: '专家',
-        unlocked: gameProgress.mathematics?.[7] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得5分'],
-        targetScore: 28,
-        completed: gameProgress.mathematics?.[8] || false
-      },
-      {
-        id: 10,
-        title: '运算宗师',
-        description: '数学运算的最高境界',
-        difficulty: '专家',
-        unlocked: gameProgress.mathematics?.[8] || false,
-        rules: ['同色且结果相同的表达式配对', '30秒时间限制', '每对正确匹配得10分'],
-        timeLimit: 30,
-        targetScore: 30,
-        completed: gameProgress.mathematics?.[9] || false
-      }
-    ]
-  },
-  {
-    id: 'addition_subtraction',
-    name: '加减运算配对',
-    description: '加法和减法运算表达式与结果的匹配挑战',
-    icon: '➕➖',
-    color: '#FF5722',
-    totalLevels: 10,
-    completedLevels: gameProgress.additionSubtraction?.filter(Boolean).length || 0,
-    levels: [
-      {
-        id: 1,
-        title: '十以内加减',
-        description: '十以内简单加减法运算',
-        difficulty: '简单',
-        unlocked: true,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得1分'],
-        targetScore: 8,
-        completed: gameProgress.additionSubtraction?.[0] || false
-      },
-      {
-        id: 2,
-        title: '进位退位运算',
-        description: '包含进位和退位的加减运算',
-        difficulty: '简单',
-        unlocked: gameProgress.additionSubtraction?.[0] || false,
-        rules: ['同色且结果相同的表达式配对', '包含进位退位', '每对正确匹配得1分'],
-        targetScore: 10,
-        completed: gameProgress.additionSubtraction?.[1] || false
-      },
-      {
-        id: 3,
-        title: '两位数运算',
-        description: '两位数加减法运算',
-        difficulty: '中等',
-        unlocked: gameProgress.additionSubtraction?.[1] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
-        targetScore: 12,
-        completed: gameProgress.additionSubtraction?.[2] || false
-      },
-      {
-        id: 4,
-        title: '混合运算',
-        description: '加法和减法混合运算',
-        difficulty: '中等',
-        unlocked: gameProgress.additionSubtraction?.[2] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
-        targetScore: 15,
-        completed: gameProgress.additionSubtraction?.[3] || false
-      },
-      {
-        id: 5,
-        title: '快速加减',
-        description: '60秒内完成加减运算挑战',
-        difficulty: '困难',
-        unlocked: gameProgress.additionSubtraction?.[3] || false,
-        rules: ['同色且结果相同的表达式配对', '60秒时间限制', '每对正确匹配得3分'],
-        timeLimit: 60,
-        targetScore: 18,
-        completed: gameProgress.additionSubtraction?.[4] || false
-      },
-      {
-        id: 6,
-        title: '复杂加减',
-        description: '复杂加减法运算挑战',
-        difficulty: '困难',
-        unlocked: gameProgress.additionSubtraction?.[4] || false,
-        rules: ['同色且结果相同的表达式配对', '多重运算', '每对正确匹配得3分'],
-        targetScore: 20,
-        completed: gameProgress.additionSubtraction?.[5] || false
-      },
-      {
-        id: 7,
-        title: '高级加减',
-        description: '高级加减法运算配对挑战',
-        difficulty: '专家',
-        unlocked: gameProgress.additionSubtraction?.[5] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得4分'],
-        targetScore: 22,
-        completed: gameProgress.additionSubtraction?.[6] || false
-      },
-      {
-        id: 8,
-        title: '极速加减',
-        description: '45秒内完成高难度加减运算',
-        difficulty: '专家',
-        unlocked: gameProgress.additionSubtraction?.[6] || false,
-        rules: ['同色且结果相同的表达式配对', '45秒时间限制', '每对正确匹配得5分'],
-        timeLimit: 45,
-        targetScore: 25,
-        completed: gameProgress.additionSubtraction?.[7] || false
-      },
-      {
-        id: 9,
-        title: '终极加减',
-        description: '加减运算终极挑战',
-        difficulty: '专家',
-        unlocked: gameProgress.additionSubtraction?.[7] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得5分'],
-        targetScore: 28,
-        completed: gameProgress.additionSubtraction?.[8] || false
-      },
-      {
-        id: 10,
-        title: '加减宗师',
-        description: '加减运算的最高境界',
-        difficulty: '专家',
-        unlocked: gameProgress.additionSubtraction?.[8] || false,
-        rules: ['同色且结果相同的表达式配对', '30秒时间限制', '每对正确匹配得10分'],
-        timeLimit: 30,
-        targetScore: 30,
-        completed: gameProgress.additionSubtraction?.[9] || false
-      }
-    ]
-  },
-  {
-    id: 'multiplication_division',
-    name: '乘除运算配对',
-    description: '乘法和除法运算表达式与结果的匹配挑战',
-    icon: '✖️➗',
-    color: '#9C27B0',
-    totalLevels: 10,
-    completedLevels: gameProgress.multiplicationDivision?.filter(Boolean).length || 0,
-    levels: [
-      {
-        id: 1,
-        title: '九九乘法',
-        description: '九九乘法表基础运算',
-        difficulty: '简单',
-        unlocked: true,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得1分'],
-        targetScore: 8,
-        completed: gameProgress.multiplicationDivision?.[0] || false
-      },
-      {
-        id: 2,
-        title: '简单除法',
-        description: '简单除法运算',
-        difficulty: '简单',
-        unlocked: gameProgress.multiplicationDivision?.[0] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得1分'],
-        targetScore: 10,
-        completed: gameProgress.multiplicationDivision?.[1] || false
-      },
-      {
-        id: 3,
-        title: '两位数乘法',
-        description: '两位数乘法运算',
-        difficulty: '中等',
-        unlocked: gameProgress.multiplicationDivision?.[1] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
-        targetScore: 12,
-        completed: gameProgress.multiplicationDivision?.[2] || false
-      },
-      {
-        id: 4,
-        title: '复杂除法',
-        description: '复杂除法运算',
-        difficulty: '中等',
-        unlocked: gameProgress.multiplicationDivision?.[2] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
-        targetScore: 15,
-        completed: gameProgress.multiplicationDivision?.[3] || false
-      },
-      {
-        id: 5,
-        title: '快速乘除',
-        description: '60秒内完成乘除运算挑战',
-        difficulty: '困难',
-        unlocked: gameProgress.multiplicationDivision?.[3] || false,
-        rules: ['同色且结果相同的表达式配对', '60秒时间限制', '每对正确匹配得3分'],
-        timeLimit: 60,
-        targetScore: 18,
-        completed: gameProgress.multiplicationDivision?.[4] || false
-      },
-      {
-        id: 6,
-        title: '混合乘除',
-        description: '乘法和除法混合运算',
-        difficulty: '困难',
-        unlocked: gameProgress.multiplicationDivision?.[4] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得3分'],
-        targetScore: 20,
-        completed: gameProgress.multiplicationDivision?.[5] || false
-      },
-      {
-        id: 7,
-        title: '高级乘除',
-        description: '高级乘除法运算配对挑战',
-        difficulty: '专家',
-        unlocked: gameProgress.multiplicationDivision?.[5] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得4分'],
-        targetScore: 22,
-        completed: gameProgress.multiplicationDivision?.[6] || false
-      },
-      {
-        id: 8,
-        title: '极速乘除',
-        description: '45秒内完成高难度乘除运算',
-        difficulty: '专家',
-        unlocked: gameProgress.multiplicationDivision?.[6] || false,
-        rules: ['同色且结果相同的表达式配对', '45秒时间限制', '每对正确匹配得5分'],
-        timeLimit: 45,
-        targetScore: 25,
-        completed: gameProgress.multiplicationDivision?.[7] || false
-      },
-      {
-        id: 9,
-        title: '终极乘除',
-        description: '乘除运算终极挑战',
-        difficulty: '专家',
-        unlocked: gameProgress.multiplicationDivision?.[7] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得5分'],
-        targetScore: 28,
-        completed: gameProgress.multiplicationDivision?.[8] || false
-      },
-      {
-        id: 10,
-        title: '乘除宗师',
-        description: '乘除运算的最高境界',
-        difficulty: '专家',
-        unlocked: gameProgress.multiplicationDivision?.[8] || false,
-        rules: ['同色且结果相同的表达式配对', '30秒时间限制', '每对正确匹配得10分'],
-        timeLimit: 30,
-        targetScore: 30,
-        completed: gameProgress.multiplicationDivision?.[9] || false
-      }
-    ]
-  },
-  {
-    id: 'four_operations',
-    name: '四则运算配对',
-    description: '加减乘除四则运算混合挑战',
-    icon: '🔢',
-    color: '#3F51B5',
-    totalLevels: 10,
-    completedLevels: gameProgress.fourOperations?.filter(Boolean).length || 0,
-    levels: [
-      {
-        id: 1,
-        title: '基础四则',
-        description: '四则运算基础混合',
-        difficulty: '简单',
-        unlocked: true,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得1分'],
-        targetScore: 8,
-        completed: gameProgress.fourOperations?.[0] || false
-      },
-      {
-        id: 2,
-        title: '简单混合',
-        description: '简单四则运算混合',
-        difficulty: '简单',
-        unlocked: gameProgress.fourOperations?.[0] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得1分'],
-        targetScore: 10,
-        completed: gameProgress.fourOperations?.[1] || false
-      },
-      {
-        id: 3,
-        title: '中等难度',
-        description: '中等难度四则运算',
-        difficulty: '中等',
-        unlocked: gameProgress.fourOperations?.[1] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
-        targetScore: 12,
-        completed: gameProgress.fourOperations?.[2] || false
-      },
-      {
-        id: 4,
-        title: '复杂运算',
-        description: '复杂四则运算混合',
-        difficulty: '中等',
-        unlocked: gameProgress.fourOperations?.[2] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得2分'],
-        targetScore: 15,
-        completed: gameProgress.fourOperations?.[3] || false
-      },
-      {
-        id: 5,
-        title: '快速四则',
-        description: '60秒内完成四则运算挑战',
-        difficulty: '困难',
-        unlocked: gameProgress.fourOperations?.[3] || false,
-        rules: ['同色且结果相同的表达式配对', '60秒时间限制', '每对正确匹配得3分'],
-        timeLimit: 60,
-        targetScore: 18,
-        completed: gameProgress.fourOperations?.[4] || false
-      },
-      {
-        id: 6,
-        title: '高级混合',
-        description: '高级四则运算混合挑战',
-        difficulty: '困难',
-        unlocked: gameProgress.fourOperations?.[4] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得3分'],
-        targetScore: 20,
-        completed: gameProgress.fourOperations?.[5] || false
-      },
-      {
-        id: 7,
-        title: '专家四则',
-        description: '专家级四则运算配对挑战',
-        difficulty: '专家',
-        unlocked: gameProgress.fourOperations?.[5] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得4分'],
-        targetScore: 22,
-        completed: gameProgress.fourOperations?.[6] || false
-      },
-      {
-        id: 8,
-        title: '极速四则',
-        description: '45秒内完成高难度四则运算',
-        difficulty: '专家',
-        unlocked: gameProgress.fourOperations?.[6] || false,
-        rules: ['同色且结果相同的表达式配对', '45秒时间限制', '每对正确匹配得5分'],
-        timeLimit: 45,
-        targetScore: 25,
-        completed: gameProgress.fourOperations?.[7] || false
-      },
-      {
-        id: 9,
-        title: '终极四则',
-        description: '四则运算终极挑战',
-        difficulty: '专家',
-        unlocked: gameProgress.fourOperations?.[7] || false,
-        rules: ['同色且结果相同的表达式配对', '每对正确匹配得5分'],
-        targetScore: 28,
-        completed: gameProgress.fourOperations?.[8] || false
-      },
-      {
-        id: 10,
-        title: '四则宗师',
-        description: '四则运算的最高境界',
-        difficulty: '专家',
-        unlocked: gameProgress.fourOperations?.[8] || false,
-        rules: ['同色且结果相同的表达式配对', '30秒时间限制', '每对正确匹配得10分'],
-        timeLimit: 30,
-        targetScore: 30,
-        completed: gameProgress.fourOperations?.[9] || false
       }
     ]
   }

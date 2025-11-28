@@ -1,7 +1,6 @@
 /* MatchingRoom 页面样式：现代化数学匹配游戏界面 */
 @import "modals.css";
 @import "game-header.css";
-@import "task-area.css";
 @import "game-area.css";
 @import "controls.css";
 @import "responsive.css";
@@ -103,7 +102,7 @@
 .game-header {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.5);
   border-radius: 16px;
   padding: 0.75rem 1rem;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
@@ -207,30 +206,4 @@
 @keyframes progressShine {
   0% { left: -100%; }
   100% { left: 100%; }
-}
-
-.match-stats {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 0.25rem;
-}
-
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.25rem 0.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  font-size: 0.85rem;
-}
-
-.stat-icon {
-  font-size: 1rem;
-}
-
-.stat-item span:last-child {
-  font-weight: 700;
-  color: #2c3e50;
 }

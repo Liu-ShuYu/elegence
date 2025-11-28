@@ -15,7 +15,9 @@ interface MatchSlotProps {
   onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
   onDragLeave: (e: React.DragEvent<HTMLDivElement>) => void;
   onDrop: (e: React.DragEvent<HTMLDivElement>, rowId: string, slotSide: 'left' | 'right') => void;
+  onDragStart: (e: React.DragEvent<HTMLDivElement>, card: Card, source: 'slot', rowId: string, slotSide: 'left' | 'right') => void;
   rowId: string;
+  draggedCard: Card | null;
 }
 
 const MatchSlot: React.FC<MatchSlotProps> = ({
@@ -24,8 +26,11 @@ const MatchSlot: React.FC<MatchSlotProps> = ({
   onDragOver,
   onDragLeave,
   onDrop,
-  rowId
+  onDragStart,
+  rowId,
+  draggedCard
 }) => {
+
   return (
     <div
       className={`match-slot ${side}-slot`}
@@ -35,8 +40,10 @@ const MatchSlot: React.FC<MatchSlotProps> = ({
     >
       {card ? (
         <div
-          className="selected-card"
+          className={`selected-card ${draggedCard?.id === card.id ? 'dragging' : ''}`}
           style={{ backgroundColor: card.color }}
+          draggable
+          onDragStart={(e) => onDragStart(e, card!, 'slot', rowId, side)}
         >
           <div className="card-content">
             <span>{card.label}</span>

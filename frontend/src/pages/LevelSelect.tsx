@@ -65,10 +65,6 @@ function LevelSelect() {
         themes={themes}
         onThemeSelect={handleThemeSelect}
       />
-
-      <button className="back-button" onClick={() => navigate('/')}>
-        ← 返回首页
-      </button>
     </div>
   );
 }

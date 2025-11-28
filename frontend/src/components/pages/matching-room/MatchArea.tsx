@@ -17,9 +17,11 @@ interface MatchAreaProps {
   onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
   onDragLeave: (e: React.DragEvent<HTMLDivElement>) => void;
   onDrop: (e: React.DragEvent<HTMLDivElement>, rowId: string, slotSide: 'left' | 'right') => void;
+  onDragStart: (e: React.DragEvent<HTMLDivElement>, card: Card, source: 'slot', rowId: string, slotSide: 'left' | 'right') => void;
+  draggedCard: Card | null;
 }
 
-const MatchArea: React.FC<MatchAreaProps> = ({ title, rows, side, onDragOver, onDragLeave, onDrop }) => {
+const MatchArea: React.FC<MatchAreaProps> = ({ title, rows, side, onDragOver, onDragLeave, onDrop, onDragStart, draggedCard }) => {
   return (
     <div className={`match-area ${side}-match-area`}>
       <div className="match-area-title">{title}</div>
@@ -33,7 +35,9 @@ const MatchArea: React.FC<MatchAreaProps> = ({ title, rows, side, onDragOver, on
                 onDragOver={onDragOver}
                 onDragLeave={onDragLeave}
                 onDrop={onDrop}
+                onDragStart={onDragStart}
                 rowId={row.rowId}
+                draggedCard={draggedCard}
               />
             ) : (
               <MatchSlot
@@ -42,7 +46,9 @@ const MatchArea: React.FC<MatchAreaProps> = ({ title, rows, side, onDragOver, on
                 onDragOver={onDragOver}
                 onDragLeave={onDragLeave}
                 onDrop={onDrop}
+                onDragStart={onDragStart}
                 rowId={row.rowId}
+                draggedCard={draggedCard}
               />
             )}
           </div>

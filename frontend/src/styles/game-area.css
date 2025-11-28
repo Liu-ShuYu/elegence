@@ -15,7 +15,7 @@
 
 /* 卡池样式 */
 .card-pool {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.5);
   border-radius: 20px;
   padding: 1.5rem;
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
@@ -216,7 +216,7 @@
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.5);
   border-radius: 20px;
   padding: 1.5rem;
   backdrop-filter: blur(10px);
@@ -317,6 +317,13 @@
   0% { transform: scale(0.8); opacity: 0; }
   50% { transform: scale(1.1); }
   100% { transform: scale(1); opacity: 1; }
+}
+
+.selected-card.dragging {
+  opacity: 0.5;
+  transform: rotate(5deg);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
 }
 
 .selected-card .card-content {

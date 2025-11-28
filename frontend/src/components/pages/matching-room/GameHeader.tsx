@@ -6,11 +6,11 @@ interface GameHeaderProps {
   totalMatches: number;
   targetScore: number;
   progressPercent: number;
-  scores: { red: number; yellow: number; green: number };
   combo: number;
   maxCombo: number;
   showComboEffect: boolean;
   onClear: () => void;
+  onShowHelp: () => void;
   onShowHistory: () => void;
   matchHistoryLength: number;
 }
@@ -21,11 +21,11 @@ const GameHeader: React.FC<GameHeaderProps> = ({
   totalMatches,
   targetScore,
   progressPercent,
-  scores,
   combo,
   maxCombo,
   showComboEffect,
   onClear,
+  onShowHelp,
   onShowHistory,
   matchHistoryLength
 }) => {
@@ -46,20 +46,6 @@ const GameHeader: React.FC<GameHeaderProps> = ({
             <div className="progress-fill" style={{ width: `${progressPercent}%` }}></div>
           </div>
         </div>
-        <div className="match-stats">
-          <div className="stat-item">
-            <span className="stat-icon">🔴</span>
-            <span>{scores.red}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-icon">🟡</span>
-            <span>{scores.yellow}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-icon">🟢</span>
-            <span>{scores.green}</span>
-          </div>
-        </div>
       </div>
 
       <div className="header-right">
@@ -74,6 +60,10 @@ const GameHeader: React.FC<GameHeaderProps> = ({
           )}
         </div>
         <div className="control-buttons">
+          <button className="control-button help-button" onClick={onShowHelp}>
+            <span className="button-icon">❓</span>
+            帮助
+          </button>
           <button className="control-button clear-button" onClick={onClear}>
             <span className="button-icon">🗑️</span>
             清空

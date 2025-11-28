@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../styles/MatchingRoom.css';
 import GameHeader from '../components/pages/matching-room/GameHeader';
-import TaskArea from '../components/pages/matching-room/TaskArea';
 import CardPool from '../components/pages/matching-room/CardPool';
 import MatchingCenter from '../components/pages/matching-room/MatchingCenter';
 import HistoryModal from '../components/pages/matching-room/HistoryModal';
 import CompletionModal from '../components/pages/matching-room/CompletionModal';
 import LoadingSpinner from '../components/pages/matching-room/LoadingSpinner';
 import ParticleEffect from '../components/pages/matching-room/ParticleEffect';
+import HelpModal from '../components/pages/matching-room/HelpModal';
 import { useMatchingGame } from '../hooks/useMatchingGame';
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
 import { useParticleEffect } from '../hooks/useParticleEffect';
@@ -40,6 +40,8 @@ function MatchingRoom() {
     gameState.matchHistory,
     particleState.createParticles
   );
+
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
   // 事件处理函数
   const handleDropOnCard = (
@@ -78,6 +80,13 @@ function MatchingRoom() {
       (slotSide === 'left' && dragState.draggedCard.source === 'left') ||
       (slotSide === 'right' && dragState.draggedCard.source === 'right')
     ) {
+      // 从卡池中移除该卡片
+      if (dragState.draggedCard.source === 'left') {
+        gameState.leftCards = gameState.leftCards.filter(card => card.id !== dragState.draggedCard!.card.id);
+      } else {
+        gameState.rightCards = gameState.rightCards.filter(card => card.id !== dragState.draggedCard!.card.id);
+      }
+
       gameState.setMatchRows(
         gameState.matchRows.map((row) => {
           if (row.rowId === rowId) {
@@ -108,8 +117,53 @@ function MatchingRoom() {
   };
 
   const handleClearWithParticles = () => {
+    // 将所有槽位中的卡片重新放回卡池
+    gameState.matchRows.forEach((row) => {
+      if (row.left) {
+        gameState.leftCards = [...gameState.leftCards, row.left];
+      }
+      if (row.right) {
+        gameState.rightCards = [...gameState.rightCards, row.right];
+      }
+    });
+
     gameState.handleClear();
     particleState.clearParticles();
+  };
+
+  const handleDragStartFromSlot = (
+    _e: React.DragEvent<HTMLDivElement>,
+    card: Card,
+    _source: 'slot',
+    rowId: string,
+    slotSide: 'left' | 'right'
+  ) => {
+    // 从匹配槽位开始拖拽时，移除该槽位中的卡片
+    gameState.setMatchRows(
+      gameState.matchRows.map((row) => {
+        if (row.rowId === rowId) {
+          if (slotSide === 'left') {
+            return { ...row, left: null };
+          } else {
+            return { ...row, right: null };
+          }
+        }
+        return row;
+      })
+    );
+
+    // 将卡片重新放回对应的卡池
+    if (slotSide === 'left') {
+      gameState.leftCards = [...gameState.leftCards, card];
+    } else {
+      gameState.rightCards = [...gameState.rightCards, card];
+    }
+
+    // 设置拖拽状态
+    dragState.setDraggedCard({
+      card,
+      source: slotSide
+    });
   };
 
   return (
@@ -127,17 +181,14 @@ function MatchingRoom() {
         totalMatches={gameState.totalMatches}
         targetScore={gameState.targetScore}
         progressPercent={gameState.progressPercent}
-        scores={gameState.scores}
         combo={gameState.combo}
         maxCombo={gameState.maxCombo}
         showComboEffect={gameState.showComboEffect}
         onClear={handleClearWithParticles}
+        onShowHelp={() => setShowHelpModal(true)}
         onShowHistory={() => gameState.setShowHistoryModal(true)}
         matchHistoryLength={gameState.matchHistory.length}
       />
-
-      {/* 任务区域 */}
-      <TaskArea tasks={gameState.tasks} completedTasks={gameState.completedTasks} />
 
       {/* 主要游戏区域 */}
       <div className="main-content">
@@ -156,6 +207,8 @@ function MatchingRoom() {
           onDragOver={dragState.handleDragOver}
           onDragLeave={dragState.handleDragLeave}
           onDrop={handleDropOnSlot}
+          onDragStart={handleDragStartFromSlot}
+          draggedCard={dragState.draggedCard?.card || null}
         />
 
         {/* 右侧卡池 */}
@@ -169,6 +222,11 @@ function MatchingRoom() {
           onDrop={handleDropOnCard}
         />
       </div>
+
+        <HelpModal
+          isOpen={showHelpModal}
+          onClose={() => setShowHelpModal(false)}
+        />
 
       {/* 匹配历史弹窗 */}
       <HistoryModal

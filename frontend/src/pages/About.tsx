@@ -1,8 +1,6 @@
-import { useNavigate } from 'react-router-dom';
 import '../styles/About.css';
 
 function About() {
-  const navigate = useNavigate();
 
   return (
     <div className="about">
@@ -126,15 +124,6 @@ function About() {
               </button>
             </div>
           </section>
-        </div>
-
-        <div className="about-footer">
-          <button
-            className="back-button"
-            onClick={() => navigate('/')}
-          >
-            ← 返回主页
-          </button>
         </div>
       </div>
     </div>

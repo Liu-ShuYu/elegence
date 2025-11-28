@@ -15,13 +15,17 @@ interface MatchingCenterProps {
   onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
   onDragLeave: (e: React.DragEvent<HTMLDivElement>) => void;
   onDrop: (e: React.DragEvent<HTMLDivElement>, rowId: string, slotSide: 'left' | 'right') => void;
+  onDragStart: (e: React.DragEvent<HTMLDivElement>, card: Card, source: 'slot', rowId: string, slotSide: 'left' | 'right') => void;
+  draggedCard: Card | null;
 }
 
 const MatchingCenter: React.FC<MatchingCenterProps> = ({
   matchRows,
   onDragOver,
   onDragLeave,
-  onDrop
+  onDrop,
+  onDragStart,
+  draggedCard
 }) => {
   return (
     <div className="matching-center">
@@ -32,6 +36,8 @@ const MatchingCenter: React.FC<MatchingCenterProps> = ({
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         onDrop={onDrop}
+        onDragStart={onDragStart}
+        draggedCard={draggedCard}
       />
       <MatchArea
         title="右侧匹配区"
@@ -40,6 +46,8 @@ const MatchingCenter: React.FC<MatchingCenterProps> = ({
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         onDrop={onDrop}
+        onDragStart={onDragStart}
+        draggedCard={draggedCard}
       />
     </div>
   );

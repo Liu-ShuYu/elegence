@@ -284,51 +284,6 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* 返回按钮 */
-.about-footer {
-  text-align: center;
-  margin-top: 3rem;
-  animation: slideInFromBottom 1s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
-}
-
-.back-button {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  padding: var(--btn-padding-md);
-  border-radius: var(--btn-border-radius-sm);
-  font-size: var(--btn-font-size-md);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--btn-transition);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  position: relative;
-  overflow: hidden;
-}
-
-.back-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.back-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.back-button:hover::before {
-  left: 100%;
-}
-
 /* 响应式设计 */
 @media (max-width: 768px) {
   .about {

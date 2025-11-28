@@ -369,3 +369,53 @@
   border-color: #667eea;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
+
+/* 帮助弹窗样式 */
+.help-modal .modal-content {
+  max-width: 620px;
+}
+
+.help-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.help-section {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  padding: 1.2rem 1.5rem;
+  border: 1px solid rgba(102, 126, 234, 0.15);
+  box-shadow: 0 6px 18px rgba(102, 126, 234, 0.12);
+}
+
+.help-section h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.2rem;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.help-section p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #34495e;
+  line-height: 1.6;
+}
+
+.help-section ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #34495e;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.help-section li {
+  position: relative;
+}
