@@ -1,4 +1,5 @@
 import React from 'react';
+import type { GameMode } from '../../../types/game';
 
 interface Level {
   id: number;
@@ -10,6 +11,7 @@ interface Level {
   timeLimit?: number;
   targetScore?: number;
   completed?: boolean;
+  mode: GameMode;
 }
 
 interface LevelCardProps {
@@ -19,6 +21,19 @@ interface LevelCardProps {
 }
 
 const LevelCard: React.FC<LevelCardProps> = ({ level, onSelect, getDifficultyColor }) => {
+  const getModeDisplayText = (mode: GameMode): string => {
+    switch (mode) {
+      case 'fixed':
+        return '固定模式';
+      case 'refresh':
+        return '循环模式';
+      case 'infinite':
+        return '无限模式';
+      default:
+        return '未知模式';
+    }
+  };
+
   return (
     <div
       className={`level-card ${!level.unlocked ? 'level-locked' : ''} ${level.completed ? 'level-completed' : ''}`}
@@ -30,6 +45,9 @@ const LevelCard: React.FC<LevelCardProps> = ({ level, onSelect, getDifficultyCol
           style={{ backgroundColor: getDifficultyColor(level.difficulty) }}
         >
           {level.difficulty}
+        </div>
+        <div className="level-mode">
+          {getModeDisplayText(level.mode)}
         </div>
       </div>
 

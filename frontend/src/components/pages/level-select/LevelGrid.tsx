@@ -1,5 +1,6 @@
 import React from 'react';
 import LevelCard from './LevelCard';
+import type { GameMode } from '../../../types/game';
 
 interface Level {
   id: number;
@@ -11,6 +12,7 @@ interface Level {
   timeLimit?: number;
   targetScore?: number;
   completed?: boolean;
+  mode: GameMode;
 }
 
 interface LevelGridProps {

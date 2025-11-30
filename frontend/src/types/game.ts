@@ -1,3 +1,5 @@
+export type GameMode = 'fixed' | 'refresh' | 'infinite';
+
 export interface Level {
   id: number;
   title: string;
@@ -8,6 +10,7 @@ export interface Level {
   timeLimit?: number;
   targetScore?: number;
   completed?: boolean;
+  mode: GameMode;
 }
 
 export interface Theme {

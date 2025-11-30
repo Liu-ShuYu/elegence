@@ -12,6 +12,7 @@ import { useMatchingGame } from '../hooks/useMatchingGame';
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
 import { useParticleEffect } from '../hooks/useParticleEffect';
 import { useMatchingLogic } from '../hooks/useMatchingLogic';
+import { generateNewCard } from '../utils/levelGenerators';
 
 interface Card {
   id: number;
@@ -80,12 +81,8 @@ function MatchingRoom() {
       (slotSide === 'left' && dragState.draggedCard.source === 'left') ||
       (slotSide === 'right' && dragState.draggedCard.source === 'right')
     ) {
-      // 从卡池中移除该卡片
-      if (dragState.draggedCard.source === 'left') {
-        gameState.leftCards = gameState.leftCards.filter(card => card.id !== dragState.draggedCard!.card.id);
-      } else {
-        gameState.rightCards = gameState.rightCards.filter(card => card.id !== dragState.draggedCard!.card.id);
-      }
+      // 标记卡片为已使用
+      gameState.setUsedCards(new Set([...gameState.usedCards, dragState.draggedCard!.card.id]));
 
       gameState.setMatchRows(
         gameState.matchRows.map((row) => {
@@ -94,16 +91,68 @@ function MatchingRoom() {
               const updatedRow = { ...row, left: dragState.draggedCard!.card };
               // 自动匹配如果两侧都有卡片
               if (updatedRow.right) {
-                handleMatch(updatedRow.left!, updatedRow.right);
-                return { ...row, left: null, right: null };
+                const matchResult = handleMatch(updatedRow.left!, updatedRow.right);
+                if (matchResult.isMatch) {
+                  // 匹配成功，计算新的卡池
+                  let newLeftCards = gameState.leftCards.filter(card => card.id !== updatedRow.left!.id);
+                  let newRightCards = gameState.rightCards.filter(card => card.id !== updatedRow.right!.id);
+                  const newUsedCards = new Set(gameState.usedCards);
+                  newUsedCards.delete(updatedRow.left!.id);
+                  newUsedCards.delete(updatedRow.right!.id);
+                  if (!gameState.fixedPool) {
+                    const newLeftCard = generateNewCard(gameState.currentLevel, gameState.currentTheme, 'left', gameState.idCounter);
+                    const newRightCard = generateNewCard(gameState.currentLevel, gameState.currentTheme, 'right', gameState.idCounter + 1);
+                    newLeftCards = [...newLeftCards, newLeftCard];
+                    newRightCards = [...newRightCards, newRightCard];
+                    gameState.setIdCounter(gameState.idCounter + 2);
+                  }
+                  gameState.setLeftCards(newLeftCards);
+                  gameState.setRightCards(newRightCards);
+                  gameState.setUsedCards(newUsedCards);
+                  return { ...row, left: null, right: null };
+                } else {
+                  // 匹配失败，清空槽位，卡片仍在卡池中
+                  // 移除已使用标记
+                  const newUsedCards = new Set(gameState.usedCards);
+                  newUsedCards.delete(updatedRow.left!.id);
+                  newUsedCards.delete(updatedRow.right.id);
+                  gameState.setUsedCards(newUsedCards);
+                  return { ...row, left: null, right: null };
+                }
               }
               return updatedRow;
             } else {
               const updatedRow = { ...row, right: dragState.draggedCard!.card };
               // 自动匹配如果两侧都有卡片
               if (updatedRow.left) {
-                handleMatch(updatedRow.left, updatedRow.right!);
-                return { ...row, left: null, right: null };
+                const matchResult = handleMatch(updatedRow.left, updatedRow.right!);
+                if (matchResult.isMatch) {
+                  // 匹配成功，计算新的卡池
+                  let newLeftCards = gameState.leftCards.filter(card => card.id !== updatedRow.left!.id);
+                  let newRightCards = gameState.rightCards.filter(card => card.id !== updatedRow.right!.id);
+                  const newUsedCards = new Set(gameState.usedCards);
+                  newUsedCards.delete(updatedRow.left!.id);
+                  newUsedCards.delete(updatedRow.right!.id);
+                  if (!gameState.fixedPool) {
+                    const newLeftCard = generateNewCard(gameState.currentLevel, gameState.currentTheme, 'left', gameState.idCounter);
+                    const newRightCard = generateNewCard(gameState.currentLevel, gameState.currentTheme, 'right', gameState.idCounter + 1);
+                    newLeftCards = [...newLeftCards, newLeftCard];
+                    newRightCards = [...newRightCards, newRightCard];
+                    gameState.setIdCounter(gameState.idCounter + 2);
+                  }
+                  gameState.setLeftCards(newLeftCards);
+                  gameState.setRightCards(newRightCards);
+                  gameState.setUsedCards(newUsedCards);
+                  return { ...row, left: null, right: null };
+                } else {
+                  // 匹配失败，清空槽位，卡片仍在卡池中
+                  // 移除已使用标记
+                  const newUsedCards = new Set(gameState.usedCards);
+                  newUsedCards.delete(updatedRow.left.id);
+                  newUsedCards.delete(updatedRow.right!.id);
+                  gameState.setUsedCards(newUsedCards);
+                  return { ...row, left: null, right: null };
+                }
               }
               return updatedRow;
             }
@@ -117,16 +166,7 @@ function MatchingRoom() {
   };
 
   const handleClearWithParticles = () => {
-    // 将所有槽位中的卡片重新放回卡池
-    gameState.matchRows.forEach((row) => {
-      if (row.left) {
-        gameState.leftCards = [...gameState.leftCards, row.left];
-      }
-      if (row.right) {
-        gameState.rightCards = [...gameState.rightCards, row.right];
-      }
-    });
-
+    // 清空槽位和已使用标记
     gameState.handleClear();
     particleState.clearParticles();
   };
@@ -152,12 +192,10 @@ function MatchingRoom() {
       })
     );
 
-    // 将卡片重新放回对应的卡池
-    if (slotSide === 'left') {
-      gameState.leftCards = [...gameState.leftCards, card];
-    } else {
-      gameState.rightCards = [...gameState.rightCards, card];
-    }
+    // 移除卡片的已使用标记
+    const newUsedCards = new Set(gameState.usedCards);
+    newUsedCards.delete(card.id);
+    gameState.setUsedCards(newUsedCards);
 
     // 设置拖拽状态
     dragState.setDraggedCard({
@@ -178,6 +216,7 @@ function MatchingRoom() {
       <GameHeader
         currentLevel={gameState.currentLevel}
         currentTheme={gameState.currentTheme}
+        mode={gameState.modeDisplay}
         totalMatches={gameState.totalMatches}
         targetScore={gameState.targetScore}
         progressPercent={gameState.progressPercent}
@@ -199,6 +238,7 @@ function MatchingRoom() {
           draggedCard={dragState.draggedCard?.card || null}
           onDragStart={dragState.handleDragStart}
           onDragEnd={dragState.handleDragEnd}
+          usedCards={gameState.usedCards}
         />
 
         {/* 中间匹配区 */}
@@ -220,6 +260,7 @@ function MatchingRoom() {
           onDragEnd={dragState.handleDragEnd}
           onDragOver={dragState.handleDragOver}
           onDrop={handleDropOnCard}
+          usedCards={gameState.usedCards}
         />
       </div>
 

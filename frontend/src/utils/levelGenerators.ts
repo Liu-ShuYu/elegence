@@ -50,20 +50,20 @@ export const generateLevel1 = (pairCount = 12): { leftCards: Card[]; rightCards:
     }
     const rightExpr = `${ra}${rightOp}${rb}`;
 
-    const leftColor = colorPool[Math.floor(Math.random() * colorPool.length)];
-    const rightColor = colorPool[Math.floor(Math.random() * colorPool.length)];
+    // 为每一对配对分配相同的随机颜色
+    const pairColor = colorPool[Math.floor(Math.random() * colorPool.length)];
 
     newLeft.push({
       id: idCounter++,
       type: 'left',
-      color: leftColor,
+      color: pairColor,
       label: leftExpr,
       animationDelay: i * 50
     });
     newRight.push({
       id: idCounter++,
       type: 'right',
-      color: rightColor,
+      color: pairColor,
       label: rightExpr,
       animationDelay: i * 50
     });
@@ -123,20 +123,20 @@ export const generateLevel2 = (pairCount = 12): { leftCards: Card[]; rightCards:
     }
     const rightExpr = `${ra}${rightOp}${rb}`;
 
-    const leftColor = colorPool[Math.floor(Math.random() * colorPool.length)];
-    const rightColor = colorPool[Math.floor(Math.random() * colorPool.length)];
+    // 为每一对配对分配相同的随机颜色
+    const pairColor = colorPool[Math.floor(Math.random() * colorPool.length)];
 
     newLeft.push({
       id: idCounter++,
       type: 'left',
-      color: leftColor,
+      color: pairColor,
       label: leftExpr,
       animationDelay: i * 50
     });
     newRight.push({
       id: idCounter++,
       type: 'right',
-      color: rightColor,
+      color: pairColor,
       label: rightExpr,
       animationDelay: i * 50
     });
@@ -190,20 +190,20 @@ export const generateAdvancedAdditionSubtractionLevel = (
     }
     const rightExpr = `${ra}${rightOp}${rb}`;
 
-    const leftColor = colorPool[Math.floor(Math.random() * colorPool.length)];
-    const rightColor = colorPool[Math.floor(Math.random() * colorPool.length)];
+    // 为每一对配对分配相同的随机颜色
+    const pairColor = colorPool[Math.floor(Math.random() * colorPool.length)];
 
     newLeft.push({
       id: idCounter++,
       type: 'left',
-      color: leftColor,
+      color: pairColor,
       label: leftExpr,
       animationDelay: i * 50
     });
     newRight.push({
       id: idCounter++,
       type: 'right',
-      color: rightColor,
+      color: pairColor,
       label: rightExpr,
       animationDelay: i * 50
     });
@@ -250,20 +250,20 @@ export const generateMultiplicationDivisionLevel = (
       rightExpr = `${r}`;
     }
 
-    const leftColor = colorPool[Math.floor(Math.random() * colorPool.length)];
-    const rightColor = colorPool[Math.floor(Math.random() * colorPool.length)];
+    // 为每一对配对分配相同的随机颜色
+    const pairColor = colorPool[Math.floor(Math.random() * colorPool.length)];
 
     newLeft.push({
       id: idCounter++,
       type: 'left',
-      color: leftColor,
+      color: pairColor,
       label: leftExpr,
       animationDelay: i * 50
     });
     newRight.push({
       id: idCounter++,
       type: 'right',
-      color: rightColor,
+      color: pairColor,
       label: rightExpr,
       animationDelay: i * 50
     });
@@ -325,20 +325,20 @@ export const generateFourOperationsLevel = (
       rightExpr = `${r}`;
     }
 
-    const leftColor = colorPool[Math.floor(Math.random() * colorPool.length)];
-    const rightColor = colorPool[Math.floor(Math.random() * colorPool.length)];
+    // 为每一对配对分配相同的随机颜色
+    const pairColor = colorPool[Math.floor(Math.random() * colorPool.length)];
 
     newLeft.push({
       id: idCounter++,
       type: 'left',
-      color: leftColor,
+      color: pairColor,
       label: leftExpr,
       animationDelay: i * 50
     });
     newRight.push({
       id: idCounter++,
       type: 'right',
-      color: rightColor,
+      color: pairColor,
       label: rightExpr,
       animationDelay: i * 50
     });
@@ -392,20 +392,20 @@ export const generateMathematicsLevel = (
     const leftExpr = `${la}${leftOp}${lb}`;
     const rightExpr = `${r}`;
 
-    const leftColor = colorPool[Math.floor(Math.random() * colorPool.length)];
-    const rightColor = colorPool[Math.floor(Math.random() * colorPool.length)];
+    // 为每一对配对分配相同的随机颜色
+    const pairColor = colorPool[Math.floor(Math.random() * colorPool.length)];
 
     newLeft.push({
       id: idCounter++,
       type: 'left',
-      color: leftColor,
+      color: pairColor,
       label: leftExpr,
       animationDelay: i * 50
     });
     newRight.push({
       id: idCounter++,
       type: 'right',
-      color: rightColor,
+      color: pairColor,
       label: rightExpr,
       animationDelay: i * 50
     });
@@ -667,6 +667,146 @@ export const generateLyricsMatchingLevel = (
   return {
     leftCards: shuffleArray(newLeft),
     rightCards: shuffleArray(newRight),
+  };
+};
+
+// 生成单个新卡片
+export const generateNewCard = (
+  levelId: number,
+  theme: string,
+  type: 'left' | 'right',
+  id: number
+): Card => {
+  const reds = '#FF4D4D';
+  const yellows = '#F1C40F';
+  const greens = '#2ECC71';
+  const colorPool = [reds, yellows, greens];
+
+  const color = colorPool[Math.floor(Math.random() * colorPool.length)];
+
+  let label = '';
+
+  if (theme === 'mathematics' || theme === 'addition_subtraction' || theme === 'multiplication_division' || theme === 'four_operations') {
+    const maxNum = Math.min(10 + levelId * 5, 100);
+    const r = Math.floor(Math.random() * maxNum);
+    const operations = ['+', '-', '×', '÷'];
+    const op = operations[Math.floor(Math.random() * operations.length)];
+    let a = 0;
+    let b = 0;
+
+    if (op === '+') {
+      a = Math.floor(Math.random() * (r + 1));
+      b = r - a;
+    } else if (op === '-') {
+      a = Math.floor(Math.random() * (maxNum - r)) + r;
+      b = a - r;
+    } else if (op === '×') {
+      a = Math.floor(Math.random() * Math.min(10, levelId + 1)) + 1;
+      b = Math.floor(Math.random() * Math.min(10, levelId + 1)) + 1;
+    } else if (op === '÷') {
+      b = Math.floor(Math.random() * Math.min(10, levelId + 1)) + 1;
+      a = b * Math.floor(Math.random() * Math.min(10, levelId + 1)) + b;
+    }
+
+    label = type === 'left' ? `${a}${op}${b}` : `${r}`;
+  } else if (theme === 'chinese_english_words') {
+    const wordPairs = [
+      { chinese: '苹果', english: 'apple' },
+      { chinese: '猫', english: 'cat' },
+      { chinese: '狗', english: 'dog' },
+      { chinese: '水', english: 'water' },
+      { chinese: '火', english: 'fire' },
+      { chinese: '天空', english: 'sky' },
+      { chinese: '大地', english: 'earth' },
+      { chinese: '太阳', english: 'sun' },
+      { chinese: '月亮', english: 'moon' },
+      { chinese: '星星', english: 'star' },
+      { chinese: '树木', english: 'tree' },
+      { chinese: '花朵', english: 'flower' },
+      { chinese: '鸟', english: 'bird' },
+      { chinese: '鱼', english: 'fish' },
+      { chinese: '房子', english: 'house' },
+      { chinese: '汽车', english: 'car' },
+      { chinese: '书', english: 'book' },
+      { chinese: '笔', english: 'pen' },
+      { chinese: '桌子', english: 'table' },
+      { chinese: '椅子', english: 'chair' },
+    ];
+    const pair = wordPairs[Math.floor(Math.random() * wordPairs.length)];
+    label = type === 'left' ? pair.chinese : pair.english;
+  } else if (theme === 'poetry_couplets') {
+    const poetryPairs = [
+      { first: '床前明月光', second: '疑是地上霜' },
+      { first: '举头望明月', second: '低头思故乡' },
+      { first: '春眠不觉晓', second: '处处闻啼鸟' },
+      { first: '夜来风雨声', second: '花落知多少' },
+      { first: '红豆生南国', second: '春来发几枝' },
+      { first: '天生我材必有用', second: '千金散尽还复来' },
+      { first: '会挽雕弓如满月', second: '西北望，射天狼' },
+      { first: '长风破浪会有时', second: '直挂云帆济沧海' },
+      { first: '大江东去', second: '浪淘尽，千古风流人物' },
+      { first: '醉里挑灯看剑', second: '梦回吹角连营' },
+      { first: '人生得意须尽欢', second: '莫使金樽空对月' },
+      { first: '天涯何处无芳草', second: '王孙不尽帝王乡' },
+      { first: '会昌城外高峰', second: '颠连直接青霄' },
+      { first: '两岸猿声啼不住', second: '轻舟已过万重山' },
+      { first: '问渠那得清如许', second: '为有源头活水来' },
+    ];
+    const pair = poetryPairs[Math.floor(Math.random() * poetryPairs.length)];
+    label = type === 'left' ? pair.first : pair.second;
+  } else if (theme === 'poetry_authors') {
+    const authorPairs = [
+      { work: '静夜思', author: '李白' },
+      { work: '春晓', author: '孟浩然' },
+      { work: '将进酒', author: '李白' },
+      { work: '蜀道难', author: '李白' },
+      { work: '登鹳雀楼', author: '王之涣' },
+      { work: '相思', author: '王维' },
+      { work: '送元二使安西', author: '王维' },
+      { work: '望岳', author: '杜甫' },
+      { work: '春江花月夜', author: '张若虚' },
+      { work: '滁州西涧', author: '韦应物' },
+      { work: '江雪', author: '柳宗元' },
+      { work: '渔歌子', author: '张志和' },
+      { work: '如梦令', author: '李清照' },
+      { work: '水调歌头', author: '苏轼' },
+      { work: '念奴娇·赤壁怀古', author: '苏轼' },
+    ];
+    const pair = authorPairs[Math.floor(Math.random() * authorPairs.length)];
+    label = type === 'left' ? pair.work : pair.author;
+  } else if (theme === 'lyrics_matching') {
+    const lyricsPairs = [
+      { first: '天亮了', second: '起床了' },
+      { first: '我爱你', second: '你爱我' },
+      { first: '月亮代表我的心', second: '你是否明白' },
+      { first: '小星星', second: '眨眼睛' },
+      { first: '让我们荡起双桨', second: '小船儿推开波浪' },
+      { first: '我有一只小毛驴', second: '我从来也不骑' },
+      { first: '世上只有妈妈好', second: '有妈的孩子像块宝' },
+      { first: '两只老虎', second: '两只老虎' },
+      { first: '小燕子', second: '穿花衣' },
+      { first: '春天在哪里', second: '春天在哪里' },
+      { first: '让我们一起学猫叫', second: '一起喵喵喵' },
+      { first: '你拍一', second: '我拍一' },
+      { first: '一闪一闪亮晶晶', second: '满天都是小星星' },
+      { first: '小老鼠', second: '上灯台' },
+      { first: '丢丢丢', second: '丢手绢' },
+    ];
+    const pair = lyricsPairs[Math.floor(Math.random() * lyricsPairs.length)];
+    label = type === 'left' ? pair.first : pair.second;
+  } else {
+    // 默认数学
+    const maxNum = Math.min(10 + levelId * 5, 100);
+    const r = Math.floor(Math.random() * maxNum);
+    label = type === 'left' ? `${Math.floor(Math.random() * maxNum)}+${Math.floor(Math.random() * maxNum)}` : `${r}`;
+  }
+
+  return {
+    id,
+    type,
+    color,
+    label,
+    animationDelay: 0
   };
 };
 

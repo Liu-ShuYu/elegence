@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import '../styles/LevelSelect.css';
 import ThemeSelector from '../components/pages/level-select/ThemeSelector';
 import LevelGrid from '../components/pages/level-select/LevelGrid';
@@ -12,29 +12,57 @@ import { useGameProgress } from '../hooks/useGameProgress';
 
 function LevelSelect() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { gameProgress } = useGameProgress();
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
 
   // 根据游戏进度动态生成主题数据
   const themes = createThemes(gameProgress);
 
+  // 从URL参数中读取主题和关卡信息
+  useEffect(() => {
+    const themeParam = searchParams.get('theme');
+    const levelParam = searchParams.get('level');
+
+    if (themeParam && levelParam) {
+      // 如果同时有theme和level参数，直接跳转到关卡
+      const theme = themes.find(t => t.id === themeParam);
+      if (theme) {
+        const levelNumber = parseInt(levelParam);
+        const level = theme.levels.find(l => l.id === levelNumber);
+        if (level && level.unlocked) {
+          navigate(`/matching-room?theme=${theme.id}&level=${level.id}&mode=${level.mode}`);
+          return;
+        }
+      }
+    }
+
+    // 只有theme参数时，设置选中的主题
+    if (themeParam && !levelParam) {
+      const theme = themes.find(t => t.id === themeParam);
+      if (theme) {
+        // 仅在当前选中的主题不同时更新，避免无限循环
+        if (!selectedTheme || selectedTheme.id !== theme.id) {
+          setSelectedTheme(theme);
+        }
+      }
+    }
+  }, [searchParams, themes, selectedTheme]); // 移除navigate依赖并加入selectedTheme检查
+
   const handleThemeSelect = (theme: Theme) => {
     setSelectedTheme(theme);
+    // 更新URL参数
+    navigate(`/level-select?theme=${theme.id}`, { replace: true });
   };
 
   const handleLevelSelect = (level: Level) => {
-    navigate('/matching_room', {
-      state: {
-        level: level.id,
-        levelData: level,
-        theme: selectedTheme?.id,
-        themeName: selectedTheme?.name
-      }
-    });
+    navigate(`/matching-room?theme=${selectedTheme?.id}&level=${level.id}&mode=${level.mode}`);
   };
 
   const handleBackToThemes = () => {
     setSelectedTheme(null);
+    // 清除URL参数
+    navigate('/level-select', { replace: true });
   };
 
   if (selectedTheme) {

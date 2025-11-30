@@ -17,6 +17,7 @@ interface CardPoolProps {
   onDragEnd: () => void;
   onDragOver?: (e: React.DragEvent<HTMLDivElement>) => void;
   onDrop?: (e: React.DragEvent<HTMLDivElement>, card: Card) => void;
+  usedCards: Set<number>;
 }
 
 const CardPool: React.FC<CardPoolProps> = ({
@@ -26,7 +27,8 @@ const CardPool: React.FC<CardPoolProps> = ({
   onDragStart,
   onDragEnd,
   onDragOver,
-  onDrop
+  onDrop,
+  usedCards
 }) => {
   return (
     <div className="card-pool">
@@ -38,12 +40,12 @@ const CardPool: React.FC<CardPoolProps> = ({
         {cards.map((card) => (
           <div
             key={card.id}
-            className={`card ${draggedCard?.id === card.id ? 'dragging' : ''} ${card.isMatched ? 'matched' : ''}`}
+            className={`card ${draggedCard?.id === card.id ? 'dragging' : ''} ${card.isMatched ? 'matched' : ''} ${usedCards.has(card.id) ? 'used' : ''}`}
             style={{
               backgroundColor: card.color,
               animationDelay: `${card.animationDelay}ms`
             }}
-            draggable={!card.isMatched}
+            draggable={!card.isMatched && !usedCards.has(card.id)}
             onDragStart={() => onDragStart(card, card.type)}
             onDragEnd={onDragEnd}
             onDragOver={onDragOver}

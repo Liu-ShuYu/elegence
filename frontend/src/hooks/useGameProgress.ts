@@ -12,5 +12,18 @@ export const useGameProgress = () => {
     }
   }, []);
 
-  return { gameProgress, setGameProgress };
+  // 更新游戏进度
+  const updateProgress = (themeId: string, levelIndex: number, completed: boolean) => {
+    setGameProgress(prev => {
+      const newProgress = { ...prev };
+      if (!newProgress[themeId]) {
+        newProgress[themeId] = [];
+      }
+      newProgress[themeId][levelIndex] = completed;
+      localStorage.setItem('matchingGameProgress', JSON.stringify(newProgress));
+      return newProgress;
+    });
+  };
+
+  return { gameProgress, setGameProgress, updateProgress };
 };

@@ -42,7 +42,7 @@ function Sidebar() {
           // 首页：放在右下角，避免遮挡标题
           setButtonPosition({ top: window.innerHeight - 80, left: window.innerWidth - 80 });
           break;
-        case '/level_select':
+        case '/level-select':
           // 选关页面：放在右上角
           setButtonPosition({ top: 20, left: window.innerWidth - 80 });
           break;
@@ -109,7 +109,12 @@ function Sidebar() {
   }, [isDragging, dragOffset, buttonPosition]);
 
   const handleNavigation = (path: string) => {
-    navigate(path);
+    // 如果是选关挑战页面，清除查询参数
+    if (path === '/level-select') {
+      navigate('/level-select');
+    } else {
+      navigate(path);
+    }
     setIsOpen(false);
   };
 
@@ -146,8 +151,8 @@ function Sidebar() {
               🏠 主页
             </button>
             <button
-              className={`sidebar-button ${location.pathname === '/level_select' ? 'active' : ''}`}
-              onClick={() => handleNavigation('/level_select')}
+              className={`sidebar-button ${location.pathname === '/level-select' ? 'active' : ''}`}
+              onClick={() => handleNavigation('/level-select')}
             >
               🎯 选关挑战
             </button>
@@ -191,7 +196,7 @@ function Sidebar() {
         </span>
         {!isOpen && (
           <span className="button-label">
-            {location.pathname === '/level_select' ? '菜单' : '菜单'}
+            {location.pathname === '/level-select' ? '菜单' : '菜单'}
           </span>
         )}
         {/* 拖拽提示 */}

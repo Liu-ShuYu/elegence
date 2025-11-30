@@ -11,8 +11,8 @@ function App() {
       <Sidebar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/level_select" element={<LevelSelect />} />
-        <Route path="/matching_room" element={<MatchingRoom />} />
+        <Route path="/level-select" element={<LevelSelect />} />
+        <Route path="/matching-room" element={<MatchingRoom />} />
         <Route path="/about" element={<About />} />
       </Routes>
     </Router>

@@ -16,6 +16,7 @@ interface MatchSlotProps {
   onDragLeave: (e: React.DragEvent<HTMLDivElement>) => void;
   onDrop: (e: React.DragEvent<HTMLDivElement>, rowId: string, slotSide: 'left' | 'right') => void;
   onDragStart: (e: React.DragEvent<HTMLDivElement>, card: Card, source: 'slot', rowId: string, slotSide: 'left' | 'right') => void;
+  onClick?: (rowId: string, slotSide: 'left' | 'right') => void;
   rowId: string;
   draggedCard: Card | null;
 }
@@ -27,6 +28,7 @@ const MatchSlot: React.FC<MatchSlotProps> = ({
   onDragLeave,
   onDrop,
   onDragStart,
+  onClick,
   rowId,
   draggedCard
 }) => {
@@ -37,6 +39,7 @@ const MatchSlot: React.FC<MatchSlotProps> = ({
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={(e) => onDrop(e, rowId, side)}
+      onClick={onClick && !card ? () => onClick(rowId, side) : undefined}
     >
       {card ? (
         <div
@@ -53,7 +56,7 @@ const MatchSlot: React.FC<MatchSlotProps> = ({
       ) : (
         <div className="slot-hint">
           <div className="hint-icon">{side === 'left' ? '⬅️' : '➡️'}</div>
-          <div className="hint-text">拖拽</div>
+          <div className="hint-text">拖拽或点击</div>
         </div>
       )}
     </div>

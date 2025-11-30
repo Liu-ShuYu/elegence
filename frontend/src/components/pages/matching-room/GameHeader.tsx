@@ -3,6 +3,7 @@ import React from 'react';
 interface GameHeaderProps {
   currentLevel: number;
   currentTheme: string;
+  mode: string;
   totalMatches: number;
   targetScore: number;
   progressPercent: number;
@@ -18,6 +19,7 @@ interface GameHeaderProps {
 const GameHeader: React.FC<GameHeaderProps> = ({
   currentLevel,
   currentTheme,
+  mode,
   totalMatches,
   targetScore,
   progressPercent,
@@ -36,6 +38,7 @@ const GameHeader: React.FC<GameHeaderProps> = ({
           <div className="level-badge">第 {currentLevel} 关</div>
           <div className="theme-badge">{currentTheme === 'addition_subtraction' ? '加减法' :
                                        currentTheme === 'multiplication_division' ? '乘除法' : '四则运算'}</div>
+          <div className="mode-badge">{mode}</div>
         </div>
       </div>
 
