@@ -8,10 +8,11 @@ import HistoryModal from '../components/pages/matching-room/HistoryModal';
 import CompletionModal from '../components/pages/matching-room/CompletionModal';
 import LoadingSpinner from '../components/pages/matching-room/LoadingSpinner';
 import ParticleEffect from '../components/pages/matching-room/ParticleEffect';
-import { useMatchingGame } from '../hooks/useMatchingGame';
+import { useMatchingGame, DEFAULT_PAIR_COUNT } from '../hooks/useMatchingGame';
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
 import { useParticleEffect } from '../hooks/useParticleEffect';
 import { useMatchingLogic } from '../hooks/useMatchingLogic';
+import { generateLevel } from '../utils/levelGenerators';
 
 interface Card {
   id: number;
@@ -41,6 +42,35 @@ function MatchingRoom() {
     particleState.createParticles
   );
 
+  const replenishCardPools = (leftCardId: number, rightCardId: number) => {
+    let updatedLeft = gameState.leftCards.filter((card) => card.id !== leftCardId);
+    let updatedRight = gameState.rightCards.filter((card) => card.id !== rightCardId);
+
+    const missingPairs = Math.max(
+      DEFAULT_PAIR_COUNT - updatedLeft.length,
+      DEFAULT_PAIR_COUNT - updatedRight.length,
+      0
+    );
+
+    if (missingPairs > 0) {
+      const freshCards = generateLevel(gameState.currentLevel, missingPairs, gameState.currentTheme);
+      const timestamp = Date.now();
+      const leftNew = freshCards.leftCards.map((card, index) => ({
+        ...card,
+        id: timestamp + index + Math.random(),
+      }));
+      const rightNew = freshCards.rightCards.map((card, index) => ({
+        ...card,
+        id: timestamp + missingPairs + index + Math.random(),
+      }));
+      updatedLeft = [...updatedLeft, ...leftNew];
+      updatedRight = [...updatedRight, ...rightNew];
+    }
+
+    gameState.setLeftCards(updatedLeft);
+    gameState.setRightCards(updatedRight);
+  };
+
   // 事件处理函数
   const handleDropOnCard = (
     e: React.DragEvent<HTMLDivElement>,
@@ -53,10 +83,17 @@ function MatchingRoom() {
 
     // 左右卡片需要交叉匹配
     if (dragState.draggedCard.source !== targetCard.type) {
+      let matchResult;
       if (dragState.draggedCard.source === 'left') {
-        handleMatch(dragState.draggedCard.card, targetCard);
+        matchResult = handleMatch(dragState.draggedCard.card, targetCard);
+        if (matchResult.isMatch) {
+          replenishCardPools(dragState.draggedCard.card.id, targetCard.id);
+        }
       } else {
-        handleMatch(targetCard, dragState.draggedCard.card);
+        matchResult = handleMatch(targetCard, dragState.draggedCard.card);
+        if (matchResult.isMatch) {
+          replenishCardPools(targetCard.id, dragState.draggedCard.card.id);
+        }
       }
     }
 
@@ -85,7 +122,13 @@ function MatchingRoom() {
               const updatedRow = { ...row, left: dragState.draggedCard!.card };
               // 自动匹配如果两侧都有卡片
               if (updatedRow.right) {
-                handleMatch(updatedRow.left!, updatedRow.right);
+                const matchResult = handleMatch(updatedRow.left!, updatedRow.right);
+                // 如果匹配成功，从卡池中移除这两张卡片并清空槽位
+                if (matchResult.isMatch) {
+                  replenishCardPools(updatedRow.left!.id, updatedRow.right.id);
+                  return { ...row, left: null, right: null };
+                }
+                // 匹配失败，清空槽位让卡片弹回
                 return { ...row, left: null, right: null };
               }
               return updatedRow;
@@ -93,7 +136,13 @@ function MatchingRoom() {
               const updatedRow = { ...row, right: dragState.draggedCard!.card };
               // 自动匹配如果两侧都有卡片
               if (updatedRow.left) {
-                handleMatch(updatedRow.left, updatedRow.right!);
+                const matchResult = handleMatch(updatedRow.left, updatedRow.right!);
+                // 如果匹配成功，从卡池中移除这两张卡片并清空槽位
+                if (matchResult.isMatch) {
+                  replenishCardPools(updatedRow.left.id, updatedRow.right!.id);
+                  return { ...row, left: null, right: null };
+                }
+                // 匹配失败，清空槽位让卡片弹回
                 return { ...row, left: null, right: null };
               }
               return updatedRow;
@@ -109,6 +158,11 @@ function MatchingRoom() {
 
   const handleClearWithParticles = () => {
     gameState.handleClear();
+    particleState.clearParticles();
+  };
+
+  const handleRefreshCardPools = () => {
+    gameState.refreshCardPools();
     particleState.clearParticles();
   };
 
@@ -132,12 +186,13 @@ function MatchingRoom() {
         maxCombo={gameState.maxCombo}
         showComboEffect={gameState.showComboEffect}
         onClear={handleClearWithParticles}
+        onRefresh={handleRefreshCardPools}
         onShowHistory={() => gameState.setShowHistoryModal(true)}
         matchHistoryLength={gameState.matchHistory.length}
       />
 
       {/* 任务区域 */}
-      <TaskArea tasks={gameState.tasks} completedTasks={gameState.completedTasks} />
+      <TaskArea tasks={gameState.tasks} completedTasks={gameState.completedTasks} scores={gameState.scores} />
 
       {/* 主要游戏区域 */}
       <div className="main-content">
@@ -153,6 +208,7 @@ function MatchingRoom() {
         {/* 中间匹配区 */}
         <MatchingCenter
           matchRows={gameState.matchRows}
+          draggedCard={dragState.draggedCard}
           onDragOver={dragState.handleDragOver}
           onDragLeave={dragState.handleDragLeave}
           onDrop={handleDropOnSlot}

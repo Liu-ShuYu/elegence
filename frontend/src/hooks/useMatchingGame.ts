@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { generateLevel } from '../utils/levelGenerators';
 
@@ -11,11 +11,22 @@ interface Card {
   animationDelay?: number;
 }
 
+type ScoreColor = 'red' | 'yellow' | 'green';
+
 interface Task {
   id: number;
   requirement: string;
-  completed: boolean;
+  scoreKey: ScoreColor;
+  target: number;
 }
+
+export const DEFAULT_PAIR_COUNT = 15;
+
+const withUniqueIds = (cards: Card[], seed: number) =>
+  cards.map((card, index) => ({
+    ...card,
+    id: seed + index + Math.random(),
+  }));
 
 export const useMatchingGame = () => {
   const location = useLocation();
@@ -24,20 +35,9 @@ export const useMatchingGame = () => {
   // 基本状态
   const [leftCards, setLeftCards] = useState<Card[]>([]);
   const [rightCards, setRightCards] = useState<Card[]>([]);
-  const [tasks] = useState<Task[]>([
-    { id: 1, requirement: '匹配红色和紫色', completed: false },
-    { id: 2, requirement: '匹配青色和靛色', completed: false },
-    { id: 3, requirement: '匹配蓝色和粉色', completed: false },
-  ]);
-
   const [matchHistory, setMatchHistory] = useState<Array<{ left: Card; right: Card }>>([]);
-  const [completedTasks, setCompletedTasks] = useState<number[]>([]);
   const [matchRows, setMatchRows] = useState<Array<{ left: Card | null; right: Card | null; rowId: string }>>([
     { left: null, right: null, rowId: '1' },
-    { left: null, right: null, rowId: '2' },
-    { left: null, right: null, rowId: '3' },
-    { left: null, right: null, rowId: '4' },
-    { left: null, right: null, rowId: '5' },
   ]);
 
   const [scores, setScores] = useState<{ red: number; yellow: number; green: number }>({
@@ -63,12 +63,11 @@ export const useMatchingGame = () => {
     const targets = [8, 10, 12, 15, 18, 20, 25, 30, 35, 40];
     return targets[level - 1] || 8;
   };
+  const targetScore = useMemo(() => getLevelTarget(currentLevel), [currentLevel]);
 
   // 检查关卡完成条件
   useEffect(() => {
     const totalMatches = scores.red + scores.yellow + scores.green;
-    const targetScore = getLevelTarget(currentLevel);
-
     if (totalMatches >= targetScore && !levelCompleted) {
       setLevelCompleted(true);
       setShowCompletionModal(true);
@@ -86,22 +85,35 @@ export const useMatchingGame = () => {
   useEffect(() => {
     const lvl = location.state?.level;
     if (lvl) {
-      const levelData = generateLevel(lvl, 12, currentTheme);
-      setLeftCards(levelData.leftCards);
-      setRightCards(levelData.rightCards);
+      const seed = Date.now();
+      const levelData = generateLevel(lvl, DEFAULT_PAIR_COUNT, currentTheme);
+      setLeftCards(withUniqueIds(levelData.leftCards, seed));
+      setRightCards(withUniqueIds(levelData.rightCards, seed + 1000));
       setTimeout(() => setIsLoading(false), 500);
     }
   }, [location, currentTheme]);
 
+  const tasks: Task[] = useMemo(
+    () => [
+      { id: 1, requirement: '红色', scoreKey: 'red', target: targetScore },
+      { id: 2, requirement: '黄色', scoreKey: 'yellow', target: targetScore },
+      { id: 3, requirement: '绿色', scoreKey: 'green', target: targetScore },
+    ],
+    [targetScore]
+  );
+
+  const completedTasks = useMemo(
+    () =>
+      tasks
+        .filter((task) => scores[task.scoreKey] >= task.target)
+        .map((task) => task.id),
+    [tasks, scores]
+  );
+
   const handleClear = () => {
     setMatchHistory([]);
-    setCompletedTasks([]);
     setMatchRows([
       { left: null, right: null, rowId: '1' },
-      { left: null, right: null, rowId: '2' },
-      { left: null, right: null, rowId: '3' },
-      { left: null, right: null, rowId: '4' },
-      { left: null, right: null, rowId: '5' },
     ]);
     setCombo(0);
     setMaxCombo(0);
@@ -119,14 +131,23 @@ export const useMatchingGame = () => {
     navigate('/level-select');
   };
 
+  const refreshCardPools = () => {
+    const seed = Date.now();
+    const levelData = generateLevel(currentLevel, DEFAULT_PAIR_COUNT, currentTheme);
+    setLeftCards(withUniqueIds(levelData.leftCards, seed));
+    setRightCards(withUniqueIds(levelData.rightCards, seed + 1000));
+    setMatchRows([{ left: null, right: null, rowId: '1' }]);
+  };
+
   const totalMatches = scores.red + scores.yellow + scores.green;
-  const targetScore = getLevelTarget(currentLevel);
   const progressPercent = Math.min((totalMatches / targetScore) * 100, 100);
 
   return {
     // 状态
     leftCards,
+    setLeftCards,
     rightCards,
+    setRightCards,
     tasks,
     matchHistory,
     setMatchHistory,
@@ -160,5 +181,6 @@ export const useMatchingGame = () => {
     handleClear,
     handleContinueToNextLevel,
     handleBackToThemeSelect,
+    refreshCardPools,
   };
 };

@@ -11,6 +11,7 @@ interface GameHeaderProps {
   maxCombo: number;
   showComboEffect: boolean;
   onClear: () => void;
+  onRefresh: () => void;
   onShowHistory: () => void;
   matchHistoryLength: number;
 }
@@ -26,6 +27,7 @@ const GameHeader: React.FC<GameHeaderProps> = ({
   maxCombo,
   showComboEffect,
   onClear,
+  onRefresh,
   onShowHistory,
   matchHistoryLength
 }) => {
@@ -77,6 +79,13 @@ const GameHeader: React.FC<GameHeaderProps> = ({
           <button className="control-button clear-button" onClick={onClear}>
             <span className="button-icon">🗑️</span>
             清空
+          </button>
+          <button
+            className="control-button refresh-button"
+            onClick={onRefresh}
+          >
+            <span className="button-icon">🔄</span>
+            刷新
           </button>
           <button
             className="control-button history-button"
